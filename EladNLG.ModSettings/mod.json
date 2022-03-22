@@ -1,0 +1,15 @@
+{
+    "Name": "Mod Settings",
+    "Version": "1.0.0",
+    "Description": "pain",
+    "LoadPriority": 2,
+    "Scripts": [
+        {
+            "Path": "ui/menu_mod_settings.nut",
+            "RunOn": "UI",
+            "UICallback": {
+                "Before": "AddModSettingsMenu"
+            }
+        }
+    ]
+}

@@ -1,0 +1,7 @@
+{
+    "name": "ModSettings",
+    "description": "A mod that adds a settings menu for modders to add their own settings in - with a filter to find certain ones easily.",
+    "version_number": "1.0.0",
+    "dependencies": [],
+    "website_url": "https://github.com/EladNLG/ModSettings"
+}
