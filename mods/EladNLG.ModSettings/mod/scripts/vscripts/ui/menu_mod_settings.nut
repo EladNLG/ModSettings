@@ -15,6 +15,8 @@ struct ConVarData {
 	bool isEmptySpace = false
 	bool isEnumSetting = false
 	array<string> values
+	var customMenu
+	bool hasCustomMenu = false
 }
 
 struct {
@@ -48,7 +50,10 @@ void function InitModMenu()
 	/////////////////////////////
 	// BASE NORTHSTAR SETTINGS //
 	/////////////////////////////
-
+	ConVarData test
+	test.displayName = "Base Northstar Settings"
+	TestString(test)
+	printt("Testarr len", test.displayName)
 	// most of these are overrided in the cfg, maybe ask bob to remove the cfg stuff from there?
 	// at the same time, might fuck with dedis so idk.
 	// these are pretty long too, might need to e x t e n d the settings menu
@@ -116,16 +121,30 @@ void function InitModMenu()
 		child.SetNavDown( Hud_GetChild( file.modPanels[ GetIndex( i + 1, len ) ], "TextEntrySetting" ) )
 	}
 
-	Hud_AddEventHandler( Hud_GetChild( file.menu, "BtnModsSearch" ), UIE_LOSE_FOCUS, OnFilterTextPanelChanged )
+	//Hud_AddEventHandler( Hud_GetChild( file.menu, "BtnModsSearch" ), UIE_LOSE_FOCUS, OnFilterTextPanelChanged )
 	Hud_AddEventHandler( Hud_GetChild( file.menu, "BtnFiltersClear" ), UIE_CLICK, OnClearButtonPressed )
 	// mouse delta 
 	AddMouseMovementCaptureHandler( file.menu, UpdateMouseDeltaBuffer )
+
+	thread SearchBarUpdate()
 }
 
-void function OnFilterTextPanelChanged( var button )
+void function TestString(ConVarData test)
 {
-	file.filterText = Hud_GetUTF8Text( button )
-	OnFiltersChange(0)
+	test.displayName = "test"
+}
+
+void function SearchBarUpdate()
+{
+	while (true)
+	{
+		if (file.filterText != Hud_GetUTF8Text( Hud_GetChild( file.menu, "BtnModsSearch" ) ) )
+		{
+			file.filterText = Hud_GetUTF8Text( Hud_GetChild( file.menu, "BtnModsSearch" ) )
+			OnFiltersChange(0)
+		}
+		WaitFrame()
+	}
 }
 
 int function GetIndex( int index, int length )
@@ -269,7 +288,7 @@ void function UpdateListSliderHeight()
 
 void function UpdateList()
 {
-	Hud_SetFocused(Hud_GetChild(file.menu, "FilterPanel"))
+	Hud_SetFocused(Hud_GetChild(file.menu, "BtnModsSearch"))
 	file.updatingList = true
 
 	array<ConVarData> filteredList = []
@@ -364,7 +383,9 @@ void function SetModMenuNameText( var button )
 		Hud_SetText( resetButton, "Reset All" ) 
 		Hud_SetSize( resetButton, 120, 40 )
 		Hud_SetPos( label, 0, 0 )
-		Hud_SetSize( label, 450 + 150 + 85, 40 )
+		Hud_SetSize( label, 800 - 120 - 85, 40 )
+		Hud_SetSize( Hud_GetChild(panel, "OpenCustomMenu"), 85, 40 )
+		Hud_SetVisible( Hud_GetChild(panel, "OpenCustomMenu"), conVar.hasCustomMenu )
 	}
 	else {
 		Hud_SetText( label, conVar.displayName ) 
@@ -373,6 +394,7 @@ void function SetModMenuNameText( var button )
 		Hud_SetText( resetButton, "Reset" ) 
 		Hud_SetSize( resetButton, 90, 40 )
 		Hud_SetSize( label, 375 + 85, 40 )
+		Hud_SetSize( Hud_GetChild(panel, "OpenCustomMenu"), 0, 40 )
 	}
 }
 
@@ -426,7 +448,7 @@ void function OnModMenuOpened()
 	
 	RegisterButtonPressedCallback(MOUSE_WHEEL_UP , OnScrollUp)
 	RegisterButtonPressedCallback(MOUSE_WHEEL_DOWN , OnScrollDown)
-
+	
 	
 	OnFiltersChange(0)
 }
@@ -525,6 +547,20 @@ void function AddConVarSettingEnum( string conVar, string displayName, string mo
 	data.isEnumSetting = true
 
 	file.conVarList.append(data)
+}
+
+void function SetCategoryCustomMenu( string category, var menu )
+{
+	foreach (ConVarData c in file.conVarList)
+	{
+		if (!c.isModName) continue
+		if (c.isEmptySpace) continue
+		if (c.modName != category) continue
+
+		c.customMenu = menu
+		c.hasCustomMenu = true
+		break
+	}
 }
 
 void function SendTextPanelChanges( var textPanel ) 

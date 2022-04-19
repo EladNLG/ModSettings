@@ -60,6 +60,8 @@ void function InitMainMenuPanel()
 
 	int headerIndex = 0
 	int buttonIndex = 0
+	#if !PLAYER_HAS_ROGUELIKE_MOD
+	headerIndex = 0
 	var campaignHeader = AddComboButtonHeader( comboStruct, headerIndex, "#GAMEMODE_SOLO" )
 	file.spButtons.append( AddComboButton( comboStruct, headerIndex, buttonIndex, "" ) )
 	file.spButtonFuncs.append( DoNothing() )
@@ -74,6 +76,9 @@ void function InitMainMenuPanel()
 	Hud_AddEventHandler( file.spButtons[buttonIndex], UIE_CLICK, RunSPButton2 )
 	buttonIndex++
 	UpdateSPButtons()
+	#else 
+	file.spButtons = AddRoguelikeMenu( comboStruct )
+	#endif
 
 	headerIndex++
 	buttonIndex = 0
@@ -607,6 +612,9 @@ void function MonitorTrialVersionChange()
 
 void function UpdateSPButtons()
 {
+	#if PLAYER_HAS_ROGUELIKE_MOD
+	return // don't modify Roguelike buttons
+	#endif
 	foreach( button in file.spButtons )
 	{
 		ComboButton_SetText( button, "" )

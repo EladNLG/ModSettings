@@ -10,6 +10,14 @@
             "UICallback": {
                 "Before": "AddModSettingsMenu"
             }
+        },
+        {
+            "Path": "ui/menu_roguelike.nut",
+            "RunOn": "UI"
+        },
+        {
+            "Path": "ui/menu_mod_settings_menu.nut",
+            "RunOn": "UI"
         }
     ]
 }
