@@ -3,7 +3,7 @@ global function AddModSettingsMenu
 global function AddConVarSetting
 global function AddConVarSettingEnum
 
-const int BUTTONS_PER_PAGE = 15
+const int BUTTONS_PER_PAGE = 8
 const string SETTING_ITEM_TEXT = "                        " // this is long enough to be the same size as the textentry field
 
 struct ConVarData {
@@ -178,6 +178,7 @@ void function ShowAreYouSureDialog( string header, void functionref() func, stri
 	AddDialogFooter( dialogData, "#B_BUTTON_BACK" )
 
 	OpenDialog( dialogData )
+	SetBlurEnabled( false )
 }
 
 void functionref() function ResetAllConVarsForModEventHandler( string modName )
@@ -243,7 +244,7 @@ void function SliderBarUpdate()
 	Hud_SetFocused(sliderButton)
 
 	float minYPos = -40.0 * (GetScreenSize()[1] / 1080.0)
-	float maxHeight = 604.0  * (GetScreenSize()[1] / 1080.0)
+	float maxHeight = 320.0  * (GetScreenSize()[1] / 1080.0)
 	float maxYPos = minYPos - (maxHeight - Hud_GetHeight( sliderPanel ))
 	float useableSpace = (maxHeight - Hud_GetHeight( sliderPanel ))
 
@@ -273,7 +274,7 @@ void function UpdateListSliderHeight()
 	
 	float mods = float ( file.filteredList.len() )
 
-	float maxHeight = 604.0 * (GetScreenSize()[1] / 1080.0)
+	float maxHeight = 320.0 * (GetScreenSize()[1] / 1080.0)
 	float minHeight = 80.0 * (GetScreenSize()[1] / 1080.0)
 
 	float height = maxHeight * ( float( BUTTONS_PER_PAGE ) / mods )
@@ -329,7 +330,7 @@ void function UpdateList()
 
 	int j = int( min( file.filteredList.len() + file.scrollOffset, 15 ) )
 
-	for ( int i = 0; i < 15; i++ )
+	for ( int i = 0; i < BUTTONS_PER_PAGE; i++ )
 	{
 		Hud_SetEnabled( file.modPanels[ i ], i < j )
 		Hud_SetVisible( file.modPanels[ i ], i < j )
@@ -428,7 +429,7 @@ void function UpdateListSliderPosition()
 	float mods = float ( file.filteredList.len() )
 
 	float minYPos = -40.0 * (GetScreenSize()[1] / 1080.0)
-	float useableSpace = (604.0 * (GetScreenSize()[1] / 1080.0) - Hud_GetHeight( sliderPanel ))
+	float useableSpace = (320.0 * (GetScreenSize()[1] / 1080.0) - Hud_GetHeight( sliderPanel ))
 
 	float jump = minYPos - (useableSpace / ( mods - float( BUTTONS_PER_PAGE ) ) * file.scrollOffset)
 
@@ -448,7 +449,12 @@ void function OnModMenuOpened()
 	
 	RegisterButtonPressedCallback(MOUSE_WHEEL_UP , OnScrollUp)
 	RegisterButtonPressedCallback(MOUSE_WHEEL_DOWN , OnScrollDown)
-	
+	RegisterButtonPressedCallback(KEY_F1, ToggleHideMenu)
+
+	SetBlurEnabled( false )
+	UI_SetPresentationType( ePresentationType.INACTIVE )
+	Hud_SetVisible( file.menu, true )
+	isVisible = true
 	
 	OnFiltersChange(0)
 }
@@ -466,14 +472,26 @@ void function OnFiltersChange( var n )
 	UpdateListSliderHeight()
 }
 
+bool isVisible = true
+void function ToggleHideMenu( var button )
+{
+	Hud_SetVisible( file.menu, !isVisible )
+	isVisible = !isVisible
+}
+
 void function OnModMenuClosed()
 {
 	try
 	{
 		DeregisterButtonPressedCallback(MOUSE_WHEEL_UP , OnScrollUp)
 		DeregisterButtonPressedCallback(MOUSE_WHEEL_DOWN , OnScrollDown)
+		DeregisterButtonPressedCallback(KEY_F1 , ToggleHideMenu)
 	}
 	catch ( ex ) {}
+	
+	UI_SetPresentationType( ePresentationType.PILOT )
+	SetBlurEnabled( !IsMultiplayer() )
+	Hud_SetVisible( file.menu, false )
 }
 
 void function AddConVarSetting( string conVar, string displayName, string modName, string type = "" )
@@ -665,6 +683,7 @@ void function ThrowInvalidValue( string desc )
 	dialogData.message = desc
 	AddDialogButton( dialogData, "#OK" )
 	OpenDialog( dialogData )
+	SetBlurEnabled( false )
 }
 
 void function UpdateEnumSetting( var button )
