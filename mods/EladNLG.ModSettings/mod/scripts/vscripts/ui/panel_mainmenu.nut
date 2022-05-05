@@ -612,9 +612,9 @@ void function MonitorTrialVersionChange()
 
 void function UpdateSPButtons()
 {
-	#if PLAYER_HAS_ROGUELIKE_MOD
-	return // don't modify Roguelike buttons
-	#endif
+	//#if PLAYER_HAS_ROGUELIKE_MOD
+	//return // don't modify Roguelike buttons
+	//#endif
 	foreach( button in file.spButtons )
 	{
 		ComboButton_SetText( button, "" )
