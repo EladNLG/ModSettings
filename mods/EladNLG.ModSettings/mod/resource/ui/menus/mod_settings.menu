@@ -8,7 +8,7 @@
 		"zpos"								"3"
 		"wide"								"f0"
 		"tall"								"f0"
-		"autoResize"						"0"
+		"autoResize"						"1"
 		"visible"							"1"
 		"enabled"							"1"
 		"pinCorner"							"0"
@@ -254,7 +254,7 @@
 		{
 			"ControlName"				"RuiPanel"
 			"tall"						"400"
-			"wide"						"800"
+			"wide"						"815"
 			"xpos"						"10"
 			"ypos"						"10"
 			"pin_to_sibling"			"ButtonRowAnchor"

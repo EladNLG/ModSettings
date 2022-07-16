@@ -379,22 +379,24 @@ void function SetModMenuNameText( var button )
 	Hud_SetVisible(textField, !conVar.isModName)
 	Hud_SetVisible(Hud_GetChild(panel, "BottomLine"), conVar.isModName)
 	Hud_SetVisible( enumButton, !conVar.isModName && conVar.isEnumSetting )
+	float scaleX = GetScreenSize()[1] / 1080.0
+	float scaleY = GetScreenSize()[1] / 1080.0
 	if ( conVar.isModName ) {
 		Hud_SetText( label, conVar.modName ) 
 		Hud_SetText( resetButton, "Reset All" ) 
-		Hud_SetSize( resetButton, 120, 40 )
+		Hud_SetSize( resetButton, int(120 * scaleX), int(40 * scaleY) )
 		Hud_SetPos( label, 0, 0 )
-		Hud_SetSize( label, 800 - 120 - 85, 40 )
-		Hud_SetSize( Hud_GetChild(panel, "OpenCustomMenu"), 85, 40 )
+		Hud_SetSize( label, int(scaleX * (800 - 120 - 85)), int(scaleY * 40) )
+		Hud_SetSize( Hud_GetChild(panel, "OpenCustomMenu"), int(85 * scaleX), int(40 * scaleY) )
 		Hud_SetVisible( Hud_GetChild(panel, "OpenCustomMenu"), conVar.hasCustomMenu )
 	}
 	else {
 		Hud_SetText( label, conVar.displayName ) 
 		Hud_SetText( textField, conVar.isEnumSetting ? conVar.values[GetConVarInt(conVar.conVar)] : GetConVarString(conVar.conVar))
-		Hud_SetPos( label, 25, 0 )
+		Hud_SetPos( label, int(scaleX * 25), 0 )
 		Hud_SetText( resetButton, "Reset" ) 
-		Hud_SetSize( resetButton, 90, 40 )
-		Hud_SetSize( label, 375 + 85, 40 )
+		Hud_SetSize( resetButton, int(scaleX * 90), int(scaleY * 40) )
+		Hud_SetSize( label, int(scaleX * (375 + 85)), int(scaleY * 40) )
 		Hud_SetSize( Hud_GetChild(panel, "OpenCustomMenu"), 0, 40 )
 	}
 }
@@ -489,7 +491,7 @@ void function OnModMenuClosed()
 	}
 	catch ( ex ) {}
 	
-	UI_SetPresentationType( ePresentationType.PILOT )
+	UI_SetPresentationType( ePresentationType.DEFAULT )
 	SetBlurEnabled( !IsMultiplayer() )
 	Hud_SetVisible( file.menu, false )
 }

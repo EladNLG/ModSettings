@@ -60,7 +60,7 @@ void function InitMainMenuPanel()
 
 	int headerIndex = 0
 	int buttonIndex = 0
-	#if UI // temp so game doesn't break.
+	#if !PLAYER_HAS_ROGUELIKE_MOD
 	headerIndex = 0
 	var campaignHeader = AddComboButtonHeader( comboStruct, headerIndex, "#GAMEMODE_SOLO" )
 	file.spButtons.append( AddComboButton( comboStruct, headerIndex, buttonIndex, "" ) )
@@ -612,9 +612,9 @@ void function MonitorTrialVersionChange()
 
 void function UpdateSPButtons()
 {
-	//#if PLAYER_HAS_ROGUELIKE_MOD
-	//return // don't modify Roguelike buttons
-	//#endif
+	#if PLAYER_HAS_ROGUELIKE_MOD
+	return // don't modify Roguelike buttons
+	#endif
 	foreach( button in file.spButtons )
 	{
 		ComboButton_SetText( button, "" )
