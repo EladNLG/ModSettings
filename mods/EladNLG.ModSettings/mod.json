@@ -17,6 +17,10 @@
         }
     ],
     "Dependencies": {
-        "PLAYER_HAS_ROGUELIKE_MOD": "Roguelike (UI)"
-    }
+        "PLAYER_HAS_ROGUELIKE_UI": "Roguelike (UI)"
+    },
+    "SaveFiles":
+    [
+        "settings"
+    ]
 }

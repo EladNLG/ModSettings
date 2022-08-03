@@ -60,7 +60,7 @@ void function InitMainMenuPanel()
 
 	int headerIndex = 0
 	int buttonIndex = 0
-	#if !PLAYER_HAS_ROGUELIKE_MOD
+	#if !PLAYER_HAS_ROGUELIKE_UI
 	headerIndex = 0
 	var campaignHeader = AddComboButtonHeader( comboStruct, headerIndex, "#GAMEMODE_SOLO" )
 	file.spButtons.append( AddComboButton( comboStruct, headerIndex, buttonIndex, "" ) )
@@ -525,6 +525,13 @@ void function TryUnlockNorthstarButton()
 
 void function OnPlayFDButton_Activate( var button ) // repurposed for launching northstar lobby
 {
+	#if PLAYER_HAS_ROGUELIKE_UI
+		if (!allowMP)
+		{
+			OpenMPDisabledPopup()
+			return
+		}
+	#endif 
 	if ( !Hud_IsLocked( button ) )
 	{
 		SetConVarBool( "ns_is_modded_server", true )
@@ -612,7 +619,7 @@ void function MonitorTrialVersionChange()
 
 void function UpdateSPButtons()
 {
-	#if PLAYER_HAS_ROGUELIKE_MOD
+	#if PLAYER_HAS_ROGUELIKE_UI
 	return // don't modify Roguelike buttons
 	#endif
 	foreach( button in file.spButtons )

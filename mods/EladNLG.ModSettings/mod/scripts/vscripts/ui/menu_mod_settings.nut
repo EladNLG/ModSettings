@@ -30,6 +30,7 @@ struct {
 	string filterText = ""
 	table< int, int > enumRealValues
 	array<var> modPanels
+	table settingsTable
 } file
 
 struct {
@@ -45,15 +46,33 @@ void function AddModSettingsMenu()
 void function InitModMenu()
 {
 	file.menu = GetMenu( "ModSettings" )
+	//DumpStack(2)
 	AddMenuFooterOption( file.menu, BUTTON_B, "#B_BUTTON_BACK", "#BACK" )
 	
 	/////////////////////////////
 	// BASE NORTHSTAR SETTINGS //
 	/////////////////////////////
-	ConVarData test
-	test.displayName = "Base Northstar Settings"
-	TestString(test)
-	printt("Testarr len", test.displayName)
+	//ConVarData test
+	//test.displayName = "Base Northstar Settings"
+	//TestString(test)
+	//printt("Testarr len", test.displayName)
+
+	//file.settingsTable = NSLoadFile( "Mod Settings", "settings" )
+	try
+	{
+		file.settingsTable = expect table( compilestring( "return NSLoadFile( \"Mod Settings\", \"settings\" )" )() )
+		print("USING MY PR :D")
+	}
+	catch (ex)
+	{
+		print("NOT USING MY PR D:")
+	}
+
+	foreach (string key, var value in file.settingsTable)
+	{
+		printt(key, expect string( value ))
+		SetConVarString(key, expect string( value ))
+	}
 	// most of these are overrided in the cfg, maybe ask bob to remove the cfg stuff from there?
 	// at the same time, might fuck with dedis so idk.
 	// these are pretty long too, might need to e x t e n d the settings menu
@@ -598,6 +617,7 @@ void function SendTextPanelChanges( var textPanel )
 				try 
 				{
 					SetConVarInt(c.conVar, newSetting.tointeger())
+					file.settingsTable[c.conVar] <- newSetting
 				}
 				catch (ex)
 				{
@@ -615,11 +635,13 @@ void function SendTextPanelChanges( var textPanel )
 					break
 				}
 				SetConVarBool(c.conVar, newSetting == "1")
+				file.settingsTable[c.conVar] <- newSetting
 				break
 			case "float":
 				try
 				{
 					SetConVarFloat(c.conVar, newSetting.tofloat())
+					file.settingsTable[c.conVar] <- newSetting
 				}
 				catch (ex)
 				{
@@ -640,6 +662,7 @@ void function SendTextPanelChanges( var textPanel )
 					vector settingTest = <split[0].tofloat(), split[1].tofloat(), 0>
 
 					SetConVarString(c.conVar, newSetting)
+					file.settingsTable[c.conVar] <- newSetting
 				}
 				catch (ex)
 				{
@@ -662,6 +685,7 @@ void function SendTextPanelChanges( var textPanel )
 					vector settingTest = <split[0].tofloat(), split[1].tofloat(), 0>
 
 					SetConVarString(c.conVar, newSetting)
+					file.settingsTable[c.conVar] <- newSetting
 				}
 				catch (ex)
 				{
@@ -671,7 +695,16 @@ void function SendTextPanelChanges( var textPanel )
 				break
 			default:
 				SetConVarString(c.conVar, newSetting)
+				file.settingsTable[c.conVar] <- newSetting
 				break;
+		}
+		try
+		{
+			compilestring( "return function ( t ) : () { NSSaveFile( \"Mod Settings\", \"settings\", t ) }" )() ( file.settingsTable )
+		}
+		catch (ex)
+		{
+
 		}
 	}
 	else Hud_SetText( textPanel, c.values[GetConVarInt(c.conVar)])
