@@ -76,7 +76,7 @@ void function InitMainMenuPanel()
 	Hud_AddEventHandler( file.spButtons[buttonIndex], UIE_CLICK, RunSPButton2 )
 	buttonIndex++
 	UpdateSPButtons()
-	#else 
+	#else
 	file.spButtons = AddRoguelikeMenu( comboStruct )
 	#endif
 
@@ -105,9 +105,9 @@ void function InitMainMenuPanel()
 		var videoButton = AddComboButton( comboStruct, headerIndex, buttonIndex++, "#VIDEO" )
 		Hud_AddEventHandler( videoButton, UIE_CLICK, AdvanceMenuEventHandler( GetMenu( "VideoMenu" ) ) )
 	#endif
-	
+
 	// MOD SETTINGS
-	var modSettingsButton = AddComboButton( comboStruct, headerIndex, buttonIndex++, "Mod Settings" )
+	var modSettingsButton = AddComboButton( comboStruct, headerIndex, buttonIndex++, "#MOD_SETTINGS" )
 	Hud_AddEventHandler( modSettingsButton, UIE_CLICK, AdvanceMenuEventHandler( GetMenu( "ModSettings" ) ) )
 
 	var spotlightLargeButton = Hud_GetChild( file.spotlightPanel, "SpotlightLarge" )
@@ -289,7 +289,7 @@ void function UpdatePlayButton( var button )
 			}
 			else
 				file.mpButtonActivateFunc = LaunchMP
-			
+
 
 			isLocked = file.mpButtonActivateFunc == null ? true : false
 			Hud_SetLocked( button, isLocked )
@@ -435,7 +435,7 @@ void function UpdatePlayButton( var button )
 						break
 					}
 				}
-				
+
 				if ( hasNonVanillaMods )
 					file.mpButtonActivateFunc = null
 				else
@@ -510,16 +510,16 @@ void function TryUnlockNorthstarButton()
 {
 	// unlock "Launch Northstar" button until you're authed with masterserver, are allowing insecure auth, or 7.5 seconds have passed
 	float time = Time()
-	
+
 	while ( GetConVarInt( "ns_has_agreed_to_send_token" ) != NS_AGREED_TO_SEND_TOKEN || time + 10.0 > Time() )
 	{
 		Hud_SetLocked( file.fdButton, true )
 		if ( ( NSIsMasterServerAuthenticated() && IsStryderAuthenticated() ) || GetConVarBool( "ns_auth_allow_insecure" ) )
 			break
-			
+
 		WaitFrame()
 	}
-	
+
 	Hud_SetLocked( file.fdButton, false )
 }
 
@@ -531,11 +531,11 @@ void function OnPlayFDButton_Activate( var button ) // repurposed for launching 
 			OpenMPDisabledPopup()
 			return
 		}
-	#endif 
+	#endif
 	if ( !Hud_IsLocked( button ) )
 	{
 		SetConVarBool( "ns_is_modded_server", true )
-		
+
 		NSTryAuthWithLocalServer()
 		thread TryAuthWithLocalServer()
 	}
@@ -545,10 +545,10 @@ void function TryAuthWithLocalServer()
 {
 	while ( NSIsAuthenticatingWithServer() )
 		WaitFrame()
-		
+
 	if ( NSWasAuthSuccessful() )
 		NSCompleteAuthWithLocalServer()
-	
+
 	if ( GetConVarString( "mp_gamemode" ) == "solo" )
 		SetConVarString( "mp_gamemode", "tdm" )
 
@@ -803,11 +803,11 @@ enum eMainMenuPromoDataProperty
 	largeButtonText,
 	largeButtonUrl,
 	largeButtonImageIndex,
-	
+
 	smallButton1Title,
 	smallButton1Url,
 	smallButton1ImageIndex,
-	
+
 	smallButton2Title,
 	smallButton2Url,
 	smallButton2ImageIndex
@@ -816,7 +816,7 @@ enum eMainMenuPromoDataProperty
 void function UpdateCustomMainMenuPromos()
 {
 	NSRequestCustomMainMenuPromos()
-	
+
 	thread UpdateCustomMainMenuPromosThreaded()
 }
 
@@ -824,7 +824,7 @@ void function UpdateCustomMainMenuPromosThreaded()
 {
 	while ( !NSHasCustomMainMenuPromoData() )
 		WaitFrame()
-	
+
 	UpdateWhatsNewData()
 	UpdateSpotlightData()
 }
