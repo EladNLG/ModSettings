@@ -22,5 +22,8 @@
     "SaveFiles":
     [
         "settings"
+    ],
+    "Localisation": [
+        "resource/localization/mod_setting_%language%.txt"
     ]
 }
