@@ -76,16 +76,17 @@ void function InitModMenu()
 	// most of these are overrided in the cfg, maybe ask bob to remove the cfg stuff from there?
 	// at the same time, might fuck with dedis so idk.
 	// these are pretty long too, might need to e x t e n d the settings menu
-	AddConVarSettingEnum("ns_private_match_only_host_can_change_settings", "Only Allow Host to Change Private Match Settings", "Northstar - Private Match", [ "No", "Yes" ])
-	AddConVarSettingEnum("ns_private_match_only_host_can_change_settings", "Only Allow Host to Start the Match", "Northstar - Private Match", [ "No", "Yes" ])
-	AddConVarSetting("ns_private_match_countdown_length", "Private Match Countdown Duration", "Northstar - Private Match", "float")
-	AddConVarSettingEnum("ns_private_match_only_host_can_change_settings", "Override Max Player Count", "Northstar - Server", [ "No", "Yes" ])
-	AddConVarSettingEnum("ns_should_log_unknown_clientcommands", "Log Unknown Client Commands", "Northstar - Server", [ "No", "Yes" ])
-	AddConVarSetting("ns_disallowed_tacticals", "Disallowed Tacticals", "Northstar - Server")
-	AddConVarSetting("ns_disallowed_tactical_replacement", "Replacement Tactical", "Northstar - Server")
-	AddConVarSetting("ns_disallowed_weapons", "Disallowed Weapons", "Northstar - Server")
-	AddConVarSetting("ns_disallowed_weapon_primary_replacement", "Replacement Weapon", "Northstar - Server")
-	AddConVarSettingEnum("ns_should_return_to_lobby", "Return To Lobby After Match End", "Northstar - Server", [ "No", "Yes" ])
+	AddConVarSettingEnum("ns_private_match_only_host_can_change_settings", "#NS_PRIVATE_MATCH_HOST_CHANGE_SETTINGS", "#NS_PRIVATE_MATCH_TITLE", [ "#MOD_SETTING_NO", "#MOD_SETTING_YES" ])
+	AddConVarSettingEnum("ns_private_match_only_host_can_start", "#NS_PRIVATE_MATCH_HOST_CAN_START", "#NS_PRIVATE_MATCH_TITLE", [ "#MOD_SETTING_NO", "#MOD_SETTING_YES" ])
+	// fixed, from 'ns_private_match_only_host_can_change_settings' to 'ns_private_match_only_host_can_start'
+	AddConVarSetting("ns_private_match_countdown_length", "#NS_PRIVATE_MATCH_COUNTDOWN_DURATION", "#NS_PRIVATE_MATCH_TITLE", "float")
+	AddConVarSettingEnum("ns_private_match_only_host_can_change_settings", "#NS_SERVER_MAX_PLAYERS", "#NS_SERVER_TITLE", [ "#MOD_SETTING_NO", "#MOD_SETTING_YES" ])
+	AddConVarSettingEnum("ns_should_log_unknown_clientcommands", "#NS_SERVER_LOG_UNKNOWN_COMMANDS", "#NS_SERVER_TITLE", [ "#MOD_SETTING_NO", "#MOD_SETTING_YES" ])
+	AddConVarSetting("ns_disallowed_tacticals", "#NS_SERVER_DISALLOWED_TACTICALS", "#NS_SERVER_TITLE")
+	AddConVarSetting("ns_disallowed_tactical_replacement", "#NS_SERVER_REPLACEMENT_TACTICAL", "#NS_SERVER_TITLE")
+	AddConVarSetting("ns_disallowed_weapons", "#NS_SERVER_DISALLOWED_WEAPONS", "#NS_SERVER_TITLE")
+	AddConVarSetting("ns_disallowed_weapon_primary_replacement", "#NS_SERVER_REPLACEMENT_WEAPON", "#NS_SERVER_TITLE")
+	AddConVarSettingEnum("ns_should_return_to_lobby", "#NS_SERVER_RETURN_TO_LOBBY", "#NS_SERVER_TITLE", [ "#MOD_SETTING_NO", "#MOD_SETTING_YES" ])
 
 	// Nuke weird rui on filter switch :D
 	//RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "SwtBtnShowFilter")), "buttonText", "")
