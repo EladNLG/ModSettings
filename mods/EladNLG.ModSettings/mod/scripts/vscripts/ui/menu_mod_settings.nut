@@ -48,7 +48,7 @@ void function InitModMenu()
 	file.menu = GetMenu( "ModSettings" )
 	//DumpStack(2)
 	AddMenuFooterOption( file.menu, BUTTON_B, "#B_BUTTON_BACK", "#BACK" )
-	
+
 	/////////////////////////////
 	// BASE NORTHSTAR SETTINGS //
 	/////////////////////////////
@@ -76,16 +76,17 @@ void function InitModMenu()
 	// most of these are overrided in the cfg, maybe ask bob to remove the cfg stuff from there?
 	// at the same time, might fuck with dedis so idk.
 	// these are pretty long too, might need to e x t e n d the settings menu
-	AddConVarSettingEnum("ns_private_match_only_host_can_change_settings", "Only Allow Host to Change Private Match Settings", "Northstar - Private Match", [ "No", "Yes" ])
-	AddConVarSettingEnum("ns_private_match_only_host_can_change_settings", "Only Allow Host to Start the Match", "Northstar - Private Match", [ "No", "Yes" ])
-	AddConVarSetting("ns_private_match_countdown_length", "Private Match Countdown Duration", "Northstar - Private Match", "float")
-	AddConVarSettingEnum("ns_private_match_only_host_can_change_settings", "Override Max Player Count", "Northstar - Server", [ "No", "Yes" ])
-	AddConVarSettingEnum("ns_should_log_unknown_clientcommands", "Log Unknown Client Commands", "Northstar - Server", [ "No", "Yes" ])
-	AddConVarSetting("ns_disallowed_tacticals", "Disallowed Tacticals", "Northstar - Server")
-	AddConVarSetting("ns_disallowed_tactical_replacement", "Replacement Tactical", "Northstar - Server")
-	AddConVarSetting("ns_disallowed_weapons", "Disallowed Weapons", "Northstar - Server")
-	AddConVarSetting("ns_disallowed_weapon_primary_replacement", "Replacement Weapon", "Northstar - Server")
-	AddConVarSettingEnum("ns_should_return_to_lobby", "Return To Lobby After Match End", "Northstar - Server", [ "No", "Yes" ])
+	AddConVarSettingEnum("ns_private_match_only_host_can_change_settings", "#NS_PRIVATE_MATCH_HOST_CHANGE_SETTINGS", "#NS_PRIVATE_MATCH_TITLE", [ "#MOD_SETTING_NO", "#MOD_SETTING_YES" ])
+	AddConVarSettingEnum("ns_private_match_only_host_can_start", "#NS_PRIVATE_MATCH_HOST_CAN_START", "#NS_PRIVATE_MATCH_TITLE", [ "#MOD_SETTING_NO", "#MOD_SETTING_YES" ])
+	// fixed, from 'ns_private_match_only_host_can_change_settings' to 'ns_private_match_only_host_can_start'
+	AddConVarSetting("ns_private_match_countdown_length", "#NS_PRIVATE_MATCH_COUNTDOWN_DURATION", "#NS_PRIVATE_MATCH_TITLE", "float")
+	AddConVarSettingEnum("ns_private_match_only_host_can_change_settings", "#NS_SERVER_MAX_PLAYERS", "#NS_SERVER_TITLE", [ "#MOD_SETTING_NO", "#MOD_SETTING_YES" ])
+	AddConVarSettingEnum("ns_should_log_unknown_clientcommands", "#NS_SERVER_LOG_UNKNOWN_COMMANDS", "#NS_SERVER_TITLE", [ "#MOD_SETTING_NO", "#MOD_SETTING_YES" ])
+	AddConVarSetting("ns_disallowed_tacticals", "#NS_SERVER_DISALLOWED_TACTICALS", "#NS_SERVER_TITLE")
+	AddConVarSetting("ns_disallowed_tactical_replacement", "#NS_SERVER_REPLACEMENT_TACTICAL", "#NS_SERVER_TITLE")
+	AddConVarSetting("ns_disallowed_weapons", "#NS_SERVER_DISALLOWED_WEAPONS", "#NS_SERVER_TITLE")
+	AddConVarSetting("ns_disallowed_weapon_primary_replacement", "#NS_SERVER_REPLACEMENT_WEAPON", "#NS_SERVER_TITLE")
+	AddConVarSettingEnum("ns_should_return_to_lobby", "#NS_SERVER_RETURN_TO_LOBBY", "#NS_SERVER_TITLE", [ "#MOD_SETTING_NO", "#MOD_SETTING_YES" ])
 
 	// Nuke weird rui on filter switch :D
 	//RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "SwtBtnShowFilter")), "buttonText", "")
@@ -96,10 +97,10 @@ void function InitModMenu()
 	AddMenuEventHandler( file.menu, eUIEvent.MENU_CLOSE, OnModMenuClosed )
 
 	int len = file.modPanels.len()
-	print(len)	
+	print(len)
 	for (int i = 0; i < len; i++)
 	{
-		
+
 		//AddButtonEventHandler( button, UIE_CHANGE, OnSettingButtonPressed  )
 		// get panel
 		var panel = file.modPanels[i]
@@ -122,18 +123,18 @@ void function InitModMenu()
 		Hud_AddEventHandler( child, UIE_CLICK, UpdateEnumSetting )
 
 		// reset button nav
-		
+
 		child = Hud_GetChild( panel, "ResetModToDefault" )
 
 		child.SetNavUp( Hud_GetChild( file.modPanels[ GetIndex( i - 1, len ) ], "ResetModToDefault" ) )
 		child.SetNavDown( Hud_GetChild( file.modPanels[ GetIndex( i + 1, len ) ], "ResetModToDefault" ) )
 
 		Hud_AddEventHandler( child, UIE_CLICK, ResetConVar )
-		
+
 		// text field nav
 		child = Hud_GetChild( panel, "TextEntrySetting" )
 
-		// 
+		//
 		Hud_AddEventHandler( child, UIE_LOSE_FOCUS, SendTextPanelChanges )
 
 		child.SetNavUp( Hud_GetChild( file.modPanels[ GetIndex( i - 1, len ) ], "TextEntrySetting" ) )
@@ -142,7 +143,7 @@ void function InitModMenu()
 
 	//Hud_AddEventHandler( Hud_GetChild( file.menu, "BtnModsSearch" ), UIE_LOSE_FOCUS, OnFilterTextPanelChanged )
 	Hud_AddEventHandler( Hud_GetChild( file.menu, "BtnFiltersClear" ), UIE_CLICK, OnClearButtonPressed )
-	// mouse delta 
+	// mouse delta
 	AddMouseMovementCaptureHandler( file.menu, UpdateMouseDeltaBuffer )
 
 	thread SearchBarUpdate()
@@ -179,9 +180,9 @@ void function ResetConVar( var button )
 
 	if (conVar.isModName)
 	{
-		ShowAreYouSureDialog( "Are you sure?", ResetAllConVarsForModEventHandler( conVar.modName ), "This will reset ALL settings that belong to this category.\n\nThis is not revertable."  )
+		ShowAreYouSureDialog( "#ARE_YOU_SURE", ResetAllConVarsForModEventHandler( conVar.modName ), "#WILL_RESET_ALL_SETTINGS"  )
 	}
-	else ShowAreYouSureDialog( "Are you sure?", ResetConVarEventHandler( int ( Hud_GetScriptID( Hud_GetParent( button ) ) ) + file.scrollOffset ), "This will reset the " + conVar.displayName + " setting to it's default value.\n\nThis is not revertable."  )
+	else ShowAreYouSureDialog( "#ARE_YOU_SURE", ResetConVarEventHandler( int ( Hud_GetScriptID( Hud_GetParent( button ) ) ) + file.scrollOffset ), Localize( "#WILL_RESET_SETTING", conVar.displayName )  )
 }
 
 void function ShowAreYouSureDialog( string header, void functionref() func, string details )
@@ -290,7 +291,7 @@ void function UpdateListSliderHeight()
 	var sliderButton = Hud_GetChild( file.menu , "BtnModListSlider" )
 	var sliderPanel = Hud_GetChild( file.menu , "BtnModListSliderPanel" )
 	var movementCapture = Hud_GetChild( file.menu , "MouseMovementCapture" )
-	
+
 	float mods = float ( file.filteredList.len() )
 
 	float maxHeight = 320.0 * (GetScreenSize()[1] / 1080.0)
@@ -353,7 +354,7 @@ void function UpdateList()
 	{
 		Hud_SetEnabled( file.modPanels[ i ], i < j )
 		Hud_SetVisible( file.modPanels[ i ], i < j )
-		
+
 		if (i < j)
 			SetModMenuNameText( file.modPanels[ i ] )
 	}
@@ -366,7 +367,7 @@ array<ConVarData> function GetAllVarsInMod(int modNameIndex)
 	for (int i = 0; i < file.conVarList.len(); i++)
 	{
 		ConVarData c = file.conVarList[i]
-		if (c.modName == file.conVarList[modNameIndex]	.modName) 
+		if (c.modName == file.conVarList[modNameIndex]	.modName)
 		{
 			vars.append(file.conVarList[i])
 			//printt(file.conVarList[i].conVar + " is in mod " + file.conVarList[i].modName)
@@ -401,8 +402,8 @@ void function SetModMenuNameText( var button )
 	float scaleX = GetScreenSize()[1] / 1080.0
 	float scaleY = GetScreenSize()[1] / 1080.0
 	if ( conVar.isModName ) {
-		Hud_SetText( label, conVar.modName ) 
-		Hud_SetText( resetButton, "Reset All" ) 
+		Hud_SetText( label, conVar.modName )
+		Hud_SetText( resetButton, "#RESET_ALL" )
 		Hud_SetSize( resetButton, int(120 * scaleX), int(40 * scaleY) )
 		Hud_SetPos( label, 0, 0 )
 		Hud_SetSize( label, int(scaleX * (800 - 120 - 85)), int(scaleY * 40) )
@@ -410,10 +411,10 @@ void function SetModMenuNameText( var button )
 		Hud_SetVisible( Hud_GetChild(panel, "OpenCustomMenu"), conVar.hasCustomMenu )
 	}
 	else {
-		Hud_SetText( label, conVar.displayName ) 
+		Hud_SetText( label, conVar.displayName )
 		Hud_SetText( textField, conVar.isEnumSetting ? conVar.values[GetConVarInt(conVar.conVar)] : GetConVarString(conVar.conVar))
 		Hud_SetPos( label, int(scaleX * 25), 0 )
-		Hud_SetText( resetButton, "Reset" ) 
+		Hud_SetText( resetButton, "#RESET" )
 		Hud_SetSize( resetButton, int(scaleX * 90), int(scaleY * 40) )
 		Hud_SetSize( label, int(scaleX * (375 + 85)), int(scaleY * 40) )
 		Hud_SetSize( Hud_GetChild(panel, "OpenCustomMenu"), 0, 40 )
@@ -446,7 +447,7 @@ void function UpdateListSliderPosition()
 	var sliderButton = Hud_GetChild( file.menu , "BtnModListSlider" )
 	var sliderPanel = Hud_GetChild( file.menu , "BtnModListSliderPanel" )
 	var movementCapture = Hud_GetChild( file.menu , "MouseMovementCapture" )
-	
+
 	float mods = float ( file.filteredList.len() )
 
 	float minYPos = -40.0 * (GetScreenSize()[1] / 1080.0)
@@ -467,7 +468,7 @@ void function OnModMenuOpened()
 {
 	file.scrollOffset = 0
 	file.filterText = ""
-	
+
 	RegisterButtonPressedCallback(MOUSE_WHEEL_UP , OnScrollUp)
 	RegisterButtonPressedCallback(MOUSE_WHEEL_DOWN , OnScrollDown)
 	RegisterButtonPressedCallback(KEY_F1, ToggleHideMenu)
@@ -476,20 +477,20 @@ void function OnModMenuOpened()
 	UI_SetPresentationType( ePresentationType.INACTIVE )
 	Hud_SetVisible( file.menu, true )
 	isVisible = true
-	
+
 	OnFiltersChange(0)
 }
 
 void function OnFiltersChange( var n )
 {
 	file.scrollOffset = 0
-	
+
 	//HideAllButtons()
-	
+
 	//RefreshModsArray()
-	
+
 	UpdateList()
-	
+
 	UpdateListSliderHeight()
 }
 
@@ -509,7 +510,7 @@ void function OnModMenuClosed()
 		DeregisterButtonPressedCallback(KEY_F1 , ToggleHideMenu)
 	}
 	catch ( ex ) {}
-	
+
 	UI_SetPresentationType( ePresentationType.DEFAULT )
 	SetBlurEnabled( !IsMultiplayer() )
 	Hud_SetVisible( file.menu, false )
@@ -602,7 +603,7 @@ void function SetCategoryCustomMenu( string category, var menu )
 	}
 }
 
-void function SendTextPanelChanges( var textPanel ) 
+void function SendTextPanelChanges( var textPanel )
 {
 	ConVarData c = file.filteredList[ int( Hud_GetScriptID( Hud_GetParent( textPanel ) ) ) + file.scrollOffset ]
 	if (c.conVar == "") return
@@ -614,7 +615,7 @@ void function SendTextPanelChanges( var textPanel )
 		switch (c.type)
 		{
 			case "int":
-				try 
+				try
 				{
 					SetConVarInt(c.conVar, newSetting.tointeger())
 					file.settingsTable[c.conVar] <- newSetting
@@ -713,7 +714,7 @@ void function SendTextPanelChanges( var textPanel )
 void function ThrowInvalidValue( string desc )
 {
 	DialogData dialogData
-	dialogData.header = "Invalid Value" 
+	dialogData.header = "Invalid Value"
 	dialogData.image = $"ui/menu/common/dialog_error"
 	dialogData.message = desc
 	AddDialogButton( dialogData, "#OK" )
@@ -727,14 +728,14 @@ void function UpdateEnumSetting( var button )
 	ConVarData c = file.filteredList[ scriptId + file.scrollOffset ]
 
 	var panel = file.modPanels[scriptId]
-	
+
 	var textPanel = Hud_GetChild( panel, "TextEntrySetting")
-	
+
 	string selectionVal = Hud_GetDialogListSelectionValue( button )
 
 	if ( selectionVal == "main" )
 		return
-					
+
 	int enumVal = GetConVarInt(c.conVar)
 	if ( selectionVal == "next" ) // enum val += 1
 			enumVal = ( enumVal + 1 ) % c.values.len()
@@ -744,7 +745,7 @@ void function UpdateEnumSetting( var button )
 		if ( enumVal == -1 )
 			enumVal = c.values.len() - 1
 	}
-	
+
 	SetConVarInt(c.conVar, enumVal)
 	Hud_SetText( textPanel, c.values[ enumVal ] )
 

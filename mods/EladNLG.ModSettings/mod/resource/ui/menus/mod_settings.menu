@@ -24,7 +24,7 @@
 		{
 			"ControlName"			"Label"
 			"InheritProperties"		"MenuTitle"
-			"labelText"				"MOD SETTINGS"
+			"labelText"				"#MOD_SETTINGS"
 		}
 		"ImgTopBar"
 		{
